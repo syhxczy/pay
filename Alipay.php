@@ -1,7 +1,11 @@
 <?php
 
 /**
-* 
+* 支付宝类
+* @param array $config 配置
+* @param string $url HTTPS请求地址
+* @param string $alipay_public_key 支付宝公钥
+* @param string $rsaPrivateKey 商户私钥
 */
 class Alipay
 {
@@ -30,6 +34,12 @@ class Alipay
         );
     }
 
+    /**
+     * 支付
+     * @Author   syh
+     * @DateTime 2018-01-22
+     * @param    array      $order 订单详情
+     */
     public function pay($order=[])
     {
         $order['product_code'] = $this->getProductCode();
@@ -38,6 +48,12 @@ class Alipay
         $this->config['sign'] = $this->getSign();
     }
 
+    /**
+     * 获取签名
+     * @Author   syh
+     * @DateTime 2018-01-22
+     * @return   string     签名
+     */
     public function getSign() {
         $priKey = $this->rsaPrivateKey;
         $res = "-----BEGIN RSA PRIVATE KEY-----\n" .
@@ -48,6 +64,14 @@ class Alipay
         return $sign;
     }
 
+    /**
+     * 获取内容签名
+     * @Author   syh
+     * @DateTime 2018-01-22
+     * @param    array      $data   签名的内容
+     * @param    boolean    $verify 是否验证sign与sign_type
+     * @return   string             内容签名
+     */
     public function getSignContent($data=[], $verify=false)
     {
         $stringToBeSigned = '';
@@ -63,6 +87,13 @@ class Alipay
         return trim($stringToBeSigned, '&');
     }
 
+    /**
+     * 验证的内容签名
+     * @Author   syh
+     * @DateTime 2018-01-22
+     * @param    array      $params 签名的内容
+     * @return   string             内容签名
+     */
     public function rSignContent($params=[]) {
         ksort($params);
         $stringToBeSigned = "";
@@ -84,6 +115,11 @@ class Alipay
         return $stringToBeSigned;
     }
 
+    /**
+     * 创建表单
+     * @Author   syh
+     * @DateTime 2018-01-22
+     */
     public function buildPayHtml()
     {
         $para_temp = $this->config;
@@ -99,6 +135,13 @@ class Alipay
         return $sHtml;
     }
 
+    /**
+     * 同步/异步验证
+     * @Author   syh
+     * @DateTime 2018-01-22
+     * @param    array      $data 验证的内容
+     * @return   boolean          真或假
+     */
     public function verify($data=[]) {
         $res = "-----BEGIN PUBLIC KEY-----\n" .
             wordwrap($this->alipay_public_key, 64, "\n", true) .
@@ -111,7 +154,13 @@ class Alipay
         return $result;
     }
 
-    public function checkEmpty($value) {
+    /**
+     * 检查是否为空
+     * @Author   syh
+     * @DateTime 2018-01-22
+     * @return   boolean          真或假
+     */
+    public function checkEmpty($value='') {
         if (!isset($value))
             return true;
         if ($value === null)
