@@ -2,9 +2,9 @@
 require_once dirname(dirname(__FILE__)).'/Alipay.php';
 
 /**
- * 电脑网站支付
+ * 手机网站支付
  */
-class Web extends Alipay
+class Wap extends Alipay
 {
 
     public function pay($order=[])
@@ -20,7 +20,7 @@ class Web extends Alipay
      */
     protected function getMethod()
     {
-        return 'alipay.trade.page.pay';
+        return 'alipay.trade.wap.pay';
     }
 
     /**
@@ -30,6 +30,6 @@ class Web extends Alipay
     */
     protected function getProductCode()
     {
-        return 'FAST_INSTANT_TRADE_PAY';
+        return 'QUICK_WAP_WAY';
     }
 }
