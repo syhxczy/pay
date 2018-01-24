@@ -101,8 +101,7 @@ class Alipay
         foreach ($params as $k => $v) {
             if (false === $this->checkEmpty($v) && "@" != substr($v, 0, 1)) {
                 // 转换成目标字符集
-                $v = $this->characet($v, $this->postCharset);
-
+                $v = $this->characet($v, "UTF-8");
                 if ($i == 0) {
                     $stringToBeSigned .= "$k" . "=" . "$v";
                 } else {
@@ -169,6 +168,22 @@ class Alipay
             return true;
 
         return false;
+    }
+
+    /**
+     * 转换字符集编码
+     * @Author   syh
+     * @DateTime 2018-01-24
+     * @return   string
+     */
+    public function characet($data, $targetCharset) {
+        if (!empty($data)) {
+            $fileType = $this->fileCharset;
+            if (strcasecmp($fileType, $targetCharset) != 0) {
+                $data = mb_convert_encoding($data, $targetCharset, $fileType);
+            }
+        }
+        return $data;
     }
 } 
 
